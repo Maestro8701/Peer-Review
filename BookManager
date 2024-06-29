@@ -7,8 +7,6 @@
 using namespace std;
 
 int main() {
-
-
     unsigned int number_of_requests;
     cin >> number_of_requests;
 
@@ -56,5 +54,4 @@ int main() {
         }
     }
 
-    return 0;
 }
