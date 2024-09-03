@@ -1,0 +1,57 @@
+
+#include <iostream>
+#include <iomanip>
+#include <map>
+#include <set>
+
+using namespace std;
+
+int main() {
+    unsigned int number_of_requests;
+    cin >> number_of_requests;
+
+    map<unsigned int, unsigned int> user_page_map;
+    map<unsigned int, set<unsigned int>> page_user_map;
+
+    for (unsigned int i = 0; i < number_of_requests; ++i) {
+        string command;
+        cin >> command;
+
+        if (command == "CHEER") {
+            unsigned int user;
+            cin >> user;
+
+            if (user_page_map.count(user) == 0) {
+                cout << setprecision(6) << 0 << "\n";
+                continue;
+            }
+
+            unsigned int user_page = user_page_map[user];
+            auto it = page_user_map.lower_bound(user_page);
+            unsigned int users_with_less_pages = 0;
+            for (auto iter = page_user_map.begin(); iter != it; ++iter) {
+                users_with_less_pages += iter->second.size();
+            }
+
+            unsigned int total_users = user_page_map.size() - 1; 
+            double cheer_result = total_users == 0 ? 1 : static_cast<double>(users_with_less_pages) / total_users;
+            cout << setprecision(6) << cheer_result << "\n";
+
+        } else if (command == "READ") {
+            unsigned int user, page;
+            cin >> user >> page;
+
+            if (user_page_map.count(user)) {
+                unsigned int old_page = user_page_map[user];
+                page_user_map[old_page].erase(user);
+                if (page_user_map[old_page].empty()) {
+                    page_user_map.erase(old_page);
+                }
+            }
+
+            user_page_map[user] = page;
+            page_user_map[page].insert(user);
+        }
+    }
+
+}
